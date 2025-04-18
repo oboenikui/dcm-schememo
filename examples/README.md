@@ -33,47 +33,7 @@ poetry install
 ### 使い方
 
 ```bash
-python google_keep.py <vcs_file>
+python google_keep.py
 ```
 
-#### 引数
-
-- `vcs_file`: インポートするVCSファイルのパス
-- `email`: Googleアカウントのメールアドレス
-- `app_password`: Googleアカウントのアプリパスワード
-
-アプリパスワードは以下の手順で取得できます：
-1. Googleアカウントの[セキュリティ設定](https://myaccount.google.com/security)を開く
-2. 2段階認証を有効にする
-3. アプリパスワードを生成する
-
-#### 機能
-
-- VCSファイルの解析
-- メモのタイトルと本文をGoogle Keepに保存
-- 画像の添付（手動での操作が必要）
-- エラーハンドリング
-- 進捗状況の表示
-
-#### 注意事項
-
-- 画像の添付は gkeepapi の制限により自動化できないため、手動での操作が必要です
-- Google Keepの同期には若干の時間がかかる場合があります
-- エラーが発生した場合でも、処理を継続して他のメモの保存を試みます
-
-### サンプル実行例
-
-```bash
-python google_keep.py test_event.vcs example@gmail.com xxxx-xxxx-xxxx-xxxx
-```
-
-実行すると以下のような出力が表示されます：
-
-```
-VCSファイルを解析しました
-メモ「買い物リスト」を作成しました
-画像の添付が必要なメモを作成しました: 買い物リスト
-Google Keepの最新メモに手動で画像を添付してください
-続けるにはEnterを押してください...
-すべてのメモを保存しました
-```
+`test_event.vcs` に保存されているメモがGoogle Keep上に作成されます。
