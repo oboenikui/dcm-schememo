@@ -11,6 +11,46 @@ class TestVcsParser(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_to_bytes_none(self):
+        """Noneをバイト列に変換できることを確認"""
+        self.assertEqual(_to_bytes(None), b'')
+
+    def test_to_bytes_unsupported(self):
+        """未対応の型で例外が発生することを確認"""
+        with self.assertRaises(TypeError):
+            _to_bytes(123)
+
+    def test_to_str_invalid_utf8(self):
+        """不正なUTF-8データが空文字列で返されることを確認"""
+        invalid_bytes = b'\xff\xfe\xfd'  # 不正なUTF-8シーケンス
+        self.assertEqual(_to_str(invalid_bytes), "")  # 空文字列が返される
+
+    def test_decode_image_error(self):
+        """不正なBase64データでNoneが返ることを確認"""
+        self.assertIsNone(_decode_image(b'invalid base64 data'))
+
+    def test_parse_datetime_no_tz(self):
+        """タイムゾーン指定なしでも日時が解析できることを確認"""
+        dt = _parse_datetime('20250419T123456Z')
+        self.assertEqual(dt.tzinfo, timezone.utc)
+
+    def test_parse_datetime_invalid(self):
+        """不正な日時文字列の処理を確認"""
+        # None と空文字列の場合は None を返す
+        self.assertIsNone(_parse_datetime(None))
+        self.assertIsNone(_parse_datetime(""))
+
+        # 不正なフォーマットの場合は ValueError が発生
+        with self.assertRaises(ValueError):
+            _parse_datetime("invalid")  # 不正なフォーマット
+        with self.assertRaises(ValueError):
+            _parse_datetime("2025-04-15")  # 別のフォーマット
+
+    def test_parse_alarm_empty(self):
+        """空のアラーム文字列でNoneが返ることを確認"""
+        self.assertIsNone(_parse_alarm(''))
+        self.assertIsNone(_parse_alarm(';RELATED=END'))
+
     def test_parse_vcs_file(self):
         test_data = """BEGIN:VCALENDAR
 VERSION:2.0
@@ -55,7 +95,6 @@ END:VCALENDAR"""
         if test_file.exists():
             test_file.unlink()
 
-
     def test_parse_vcs_file_without_optional_fields(self):
         test_data = """BEGIN:VCALENDAR
 VERSION:2.0
@@ -94,29 +133,6 @@ END:VCALENDAR"""
         if test_file.exists():
             test_file.unlink()
 
-    def test_to_bytes_none(self):
-        """Noneをバイト列に変換できることを確認"""
-        self.assertEqual(_to_bytes(None), b'')
-
-    def test_to_bytes_unsupported(self):
-        """未対応の型で例外が発生することを確認"""
-        with self.assertRaises(TypeError):
-            _to_bytes(123)
-
-    def test_decode_image_error(self):
-        """不正なBase64データでNoneが返ることを確認"""
-        self.assertIsNone(_decode_image(b'invalid base64 data'))
-
-    def test_parse_datetime_no_tz(self):
-        """タイムゾーン指定なしでも日時が解析できることを確認"""
-        dt = _parse_datetime('20250419T123456Z')
-        self.assertEqual(dt.tzinfo, timezone.utc)
-
-    def test_parse_alarm_empty(self):
-        """空のアラーム文字列でNoneが返ることを確認"""
-        self.assertIsNone(_parse_alarm(''))
-        self.assertIsNone(_parse_alarm(';RELATED=END'))
-
     def test_parse_vcs_invalid(self):
         """不正なVCSデータで例外が発生することを確認"""
         with self.assertRaises(Exception):
@@ -145,23 +161,6 @@ END:VCALENDAR"""
         finally:
             if test_file.exists():
                 test_file.unlink()
-
-    def test_to_str_invalid_utf8(self):
-        """不正なUTF-8データが空文字列で返されることを確認"""
-        invalid_bytes = b'\xff\xfe\xfd'  # 不正なUTF-8シーケンス
-        self.assertEqual(_to_str(invalid_bytes), "")  # 空文字列が返される
-
-    def test_parse_datetime_invalid(self):
-        """不正な日時文字列の処理を確認"""
-        # None と空文字列の場合は None を返す
-        self.assertIsNone(_parse_datetime(None))
-        self.assertIsNone(_parse_datetime(""))
-
-        # 不正なフォーマットの場合は ValueError が発生
-        with self.assertRaises(ValueError):
-            _parse_datetime("invalid")  # 不正なフォーマット
-        with self.assertRaises(ValueError):
-            _parse_datetime("2025-04-15")  # 別のフォーマット
 
     def test_event_type_skip(self):
         """EVENTタイプのイベントがスキップされることを確認"""
