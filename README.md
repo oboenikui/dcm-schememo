@@ -2,6 +2,9 @@
 
 [日本語](README.ja.md)
 
+[![PyPI version](https://badge.fury.io/py/dcm-schememo.svg)](https://badge.fury.io/py/dcm-schememo)
+[![Tests](https://github.com/oboenikui/dcm-schememo/actions/workflows/test.yml/badge.svg)](https://github.com/oboenikui/dcm-schememo/actions/workflows/test.yml)
+
 A Python library for parsing memo data from VCS files exported by docomo Schedule & Memo App.
 
 ## Installation

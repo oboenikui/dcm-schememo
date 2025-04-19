@@ -2,6 +2,9 @@
 
 [English](README.md)
 
+[![PyPI version](https://badge.fury.io/py/dcm-schememo.svg)](https://badge.fury.io/py/dcm-schememo)
+[![Tests](https://github.com/oboenikui/dcm-schememo/actions/workflows/test.yml/badge.svg)](https://github.com/oboenikui/dcm-schememo/actions/workflows/test.yml)
+
 ドコモのスケジュール＆メモアプリからエクスポートしたVCSファイルのうち、メモデータを取得するPythonライブラリです。
 
 ## インストール方法

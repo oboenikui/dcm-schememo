@@ -36,8 +36,6 @@ def _to_bytes(data) -> bytes:
         return data
     if isinstance(data, str):
         return data.encode('utf-8')
-    if hasattr(data, 'to_ical'):
-        return data.to_ical()
     if data is None:
         return b''
     raise TypeError(f"Unsupported type: {type(data)}")
@@ -107,16 +105,14 @@ def parse_vcs_file(file_path) -> List[Note]:
     notes = []
 
     for event in calendar.walk('VEVENT'):
-        type = event.get("X-DCM-TYPE", b'').upper()
-        if isinstance(type, bytes):
-            type = type.decode('utf-8')
+        type = _to_str(event.get("X-DCM-TYPE", '')).upper()
         if type == "EVENT":
             continue
 
         # 修正: `SUMMARY`フィールドを文字列型にデコード
         summary = _to_str(event.get("SUMMARY"))
         description = _to_str(event.get("DESCRIPTION"))
-        photo = _decode_image(event.get("X-DCM-PHOTO", vText(b"")).to_ical())
+        photo = _decode_image(event.get("X-DCM-PHOTO", vText(b"")).encode('utf-8'))
         tz = event.get("TZ", None)
         decosuke = _decode_image(event.get("X-DCM-DECOSUKE", vText(b"")))
         aalarm = _parse_alarm(event.get("AALARM", b""), tz)
