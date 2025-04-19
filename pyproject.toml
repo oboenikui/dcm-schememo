@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dcm_schememo"
-version = "1.0.0"
+version = "1.0.1"
 description = "A Python library for docomo Schedule & Memo App backup data."
 authors = ["oboenikui <oboenikuitwitter@gmail.com>"]
 readme = "README.md"
